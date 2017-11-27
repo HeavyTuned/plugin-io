@@ -62,6 +62,7 @@ class SingleItem implements ItemLoaderContract
 		/** @var VariationBaseFilter $variationFilter */
 		$variationFilter = pluginApp(VariationBaseFilter::class);
 		$variationFilter->isActive();
+        $variationFilter->isSalable(true);
 
 		if(array_key_exists('itemId', $options) && $options['itemId'] != 0)
 		{
