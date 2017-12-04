@@ -27,6 +27,9 @@ use Plenty\Modules\Item\Search\Filter\SalesPriceFilter;
  */
 class Facets implements ItemLoaderContract
 {
+    //example SearchItemController
+    //feature/es_2_solair
+    
     /**
      * @var FacetExtensionContainer
      */
