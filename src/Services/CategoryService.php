@@ -10,6 +10,7 @@ use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Category\Models\CategoryDetails;
 use Plenty\Plugin\Application;
 use Plenty\Repositories\Models\PaginatedResult;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class CategoryService
@@ -18,6 +19,7 @@ use Plenty\Repositories\Models\PaginatedResult;
 class CategoryService
 {
     use MemoryCache;
+    use Loggable;
 
     /**
      * @var CategoryRepositoryContract
@@ -313,7 +315,10 @@ class CategoryService
             $lang = $this->sessionStorageService->getLang();
         }
 
-        return $this->categoryRepository->getLinklistTree($type, $lang, $this->webstoreConfig->getWebstoreConfig()->webstoreId, $maxLevel, $customerClassId);
+        $tree = $this->categoryRepository->getLinklistTree($type, $lang, $this->webstoreConfig->getWebstoreConfig()->webstoreId, $maxLevel, $customerClassId);
+        $this->getLogger(__FUNCTION__)->error('IO::Categories', $tree);
+
+        return $tree;
     }
 
     /**
