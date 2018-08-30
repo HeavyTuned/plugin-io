@@ -4,6 +4,7 @@ namespace IO\Services\ItemSearch\SearchPresets;
 
 use IO\Services\ItemSearch\Extensions\ContentCacheVariationLinkExtension;
 use IO\Services\ItemSearch\Factories\VariationSearchFactory;
+use IO\Services\ItemSearch\Helper\SortingHelper;
 
 /**
  * Class TagItems
@@ -23,9 +24,17 @@ class TagItems extends VariationList
         {
             $tagIds = $options['tagIds'];
         }
+    
+        $sorting = $options['sorting'];
+        if ( array_key_exists('sorting', $options ) )
+        {
+            $sorting = SortingHelper::splitPathAndOrder($options['sorting']);
+        }
+        
         /** @var VariationSearchFactory $factory */
         $factory = parent::getSearchFactory($options)
             ->hasAnyTag($tagIds)
+            ->sortBy($sorting['path'], $sorting['order'])
             ->groupByTemplateConfig();
 
         return $factory;
