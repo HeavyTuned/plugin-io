@@ -9,7 +9,7 @@ use IO\Services\ItemLoader\Services\LoadResultFields;
 use IO\Services\ItemSearch\Helper\ResultFieldTemplate;
 use IO\Services\UrlBuilder\UrlQuery;
 use Plenty\Modules\Category\Models\Category;
-use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
+use Plenty\Modules\Category\Contracts\CategoryRepositoryContra+ct;
 use Plenty\Modules\Category\Models\CategoryClient;
 use Plenty\Modules\Category\Models\CategoryDetails;
 use Plenty\Plugin\Application;
@@ -233,7 +233,6 @@ class CategoryService
         return null;
     }
 
-
     /**
      * Check whether a category is referenced by the current route
      * @param int $catID The ID for the category to check
@@ -320,17 +319,10 @@ class CategoryService
             $lang = $this->sessionStorageService->getLang();
         }
 
-<<<<<<< HEAD
-        $tree = $this->categoryRepository->getLinklistTree($type, $lang, $this->webstoreConfig->getWebstoreConfig()->webstoreId, $maxLevel, $customerClassId);
-        $this->getLogger(__FUNCTION__)->error('IO::Categories', $tree);
-
-        return $tree;
-=======
         return pluginApp( CategoryDataFilter::class )->applyResultFields(
             $this->categoryRepository->getLinklistTree($type, $lang, $this->webstoreConfig->getWebstoreConfig()->webstoreId, $maxLevel, $customerClassId),
             $this->loadResultFields( ResultFieldTemplate::get( ResultFieldTemplate::TEMPLATE_CATEGORY_TREE ) )
         );
->>>>>>> fa2ae1073614dbfcb00f43a3164f661458c4239a
     }
 
     /**
@@ -402,7 +394,6 @@ class CategoryService
             $webstoreService = pluginApp(WebstoreConfigurationService::class);
             $webstoreId = $webstoreService->getWebstoreConfig()->webstoreId;
         }
-
 
         return $category->clients->where('plenty_webstore_category_link_webstore_id', $webstoreId)->first() instanceof CategoryClient
             && $category->details->where('lang', $lang)->first() instanceof CategoryDetails;
