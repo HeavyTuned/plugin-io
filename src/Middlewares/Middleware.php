@@ -3,6 +3,7 @@
 namespace IO\Middlewares;
 
 use IO\Api\ResponseCode;
+use IO\Services\TemplateService;
 use IO\Services\WebstoreConfigurationService;
 
 use Plenty\Plugin\ConfigRepository;
@@ -58,6 +59,12 @@ class Middleware extends \Plenty\Plugin\Middleware
                 $checkoutService = pluginApp(CheckoutService::class);
                 $checkoutService->setCurrency( $currency );
             }
+            else
+            {
+                /** @var TemplateService $templateService */
+                $templateService = pluginApp(TemplateService::class);
+                $templateService->forceNoIndex(true);
+            }
         }
 
         $referrerId = $request->get('ReferrerID', null);
@@ -67,13 +74,27 @@ class Middleware extends \Plenty\Plugin\Middleware
             $checkout = pluginApp(Checkout::class);
             $checkout->setBasketReferrerId($referrerId);
         }
+        
+        $authString = $request->get('authString', '');
+        $newsletterEmailId = $request->get('newsletterEmailId', 0);
+        
+        if(strlen($authString) && (int)$newsletterEmailId > 0)
+        {
+            AuthGuard::redirect('/newsletter/subscribe/'.$authString.'/'.$newsletterEmailId);
+        }
+        
+        $orderShow = $request->get('OrderShow', '');
+        if(strlen($orderShow) && $orderShow == 'CancelNewsletter')
+        {
+            AuthGuard::redirect('/newsletter/unsubscribe');
+        }
 
         $this->checkForCallistoSearchURL($request);
     }
 
     public function after(Request $request, Response $response):Response
     {
-        if ($response->content() == '') {
+        if ($response->status() == ResponseCode::NOT_FOUND) {
             /** @var StaticPagesController $controller */
             $controller = pluginApp(StaticPagesController::class);
 
